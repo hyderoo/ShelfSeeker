@@ -1,0 +1,25 @@
+/* SplashScreen.css */
+.splash-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #fff; /* Set background color as needed */
+  }
+  
+  .logo {
+    /* Add animation styles here, for example: */
+    width: 150px;
+    height: 150px;
+    animation: rotate 2s infinite linear;
+  }
+  
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
