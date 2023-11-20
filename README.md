@@ -1,1 +1,1 @@
-# idk just want to say thank you to my parent my friend
+# ShelfSeeker made using openlibrary API
