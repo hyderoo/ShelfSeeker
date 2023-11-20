@@ -1,0 +1,55 @@
+/* Default styles for smaller screens */
+.profile {
+    padding: 3rem 0;
+}
+
+.profile-content {
+    gap: 4rem;
+    display: grid;
+}
+
+.profile-title {
+    margin: 1rem 0;
+}
+
+.profile-img img {
+    max-width: 700px; 
+    width: 100%; 
+}
+
+.profile-text p {
+    margin: 1.8rem 0;
+    opacity: 0.8;
+}
+
+/* Media query for larger screens */
+@media screen and (min-width: 800px) {
+    .profile-content {
+        grid-template-columns: 1fr 1fr; /* Adjust column layout for larger screens */
+    }
+
+    .profile-title {
+        margin-top: 0;
+    }
+
+    .profile-img img {
+        max-width: 240px; /* Adjust the maximum width for larger screens */
+        margin-left: auto; /* Move the image to the right */
+        margin-right: 1rem; /* Add some space between image and text */
+    }
+
+    .profile-text {
+        margin-left: 0; /* Adjust the margin to move the text to the left */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .socialIcons {
+        display: flex;
+        margin-top: 1rem; /* Add some space above social icons */
+    }
+
+    .socialIcons button {
+        margin-right: 1rem; /* Adjust the right margin between social icons */
+    }
+}

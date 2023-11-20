@@ -1,0 +1,62 @@
+/* ISBNcheck.css */
+.isbn-check-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
+    display: flex;
+    margin-bottom: 20px;
+    background-color: #f3f3f3;
+    border-radius: 4px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    background-color: #f3f3f3; /* Set input background color */
+}
+
+.search-bar button {
+    margin-left: 10px;
+    padding: 8px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background-color: #3498db;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-bar button img {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+}
+
+.book-details {
+    margin-top: 20px;
+}
+
+.book-img {
+    max-width: 275px; /* Set the maximum width for the book cover container */
+    margin: 0 auto; /* Center the container */
+}
+
+/* Adjust the cover image size */
+.book-details img {
+    max-width: 100%; /* Make the image responsive */
+    height: auto;
+    margin-top: 10px; /* Add a little space between image and details */
+}
+
+/* Add more styles as needed */
