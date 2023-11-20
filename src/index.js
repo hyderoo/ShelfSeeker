@@ -10,6 +10,7 @@ import BookDetails from "./components/BookDetails/DetailBuku";
 import LandingPages from './pages/LandingPages/LandingPages';
 import ISBNCheckPage from './pages/ISBNcheck/ISBNcheck'; // Import ISBNCheckPage
 import SplashScreen from './pages/SplashScreen/SplashScreen';
+import FindingAuthor from './pages/FindAuthor/FindAuthor';
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
@@ -32,8 +33,8 @@ const App = () => {
               <Route path="profile" element={<Profile />} />
               <Route path="book" element={<BookList />} />
               <Route path="/book/:id" element={<BookDetails />} />
-              {/* Add the new route for ISBN checking */}
               <Route path="isbn-check" element={<ISBNCheckPage />} />
+              <Route path="find-author" element={<FindingAuthor />} />
             </Route>
           </Routes>
         )}
