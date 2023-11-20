@@ -1,1 +1,1 @@
-# ShelfSeeker made using openlibrary API
+# The innovative ShelfSeeker utilizes the power of the OpenLibrary API to provide users with an enriched and comprehensive exploration of literary treasures. This project aims to seamlessly integrate an extensive collection of books, enhancing the search functionality and user experience. Stay tuned for an immersive journey through the world of knowledge and literature!
