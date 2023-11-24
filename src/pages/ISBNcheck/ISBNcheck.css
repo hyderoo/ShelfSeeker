@@ -1,4 +1,6 @@
 /* ISBNcheck.css */
+
+/* Container styles */
 .isbn-check-container {
     max-width: 600px;
     margin: 0 auto;
@@ -8,29 +10,39 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Search bar container styles */
+.search-bar-container {
+    background-color: #f8f8f8; /* Set the background color for the container */
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 50px;
+}
+
+/* Search bar styles */
 .search-bar {
     display: flex;
-    margin-bottom: 20px;
-    background-color: #f3f3f3;
-    border-radius: 4px;
+    background-color: #fff; /* Set the background color */
+    border: 2px solid #ffffff; /* Set the border color */
+    border-radius: 3.8rem; /* Set the border-radius */
+    overflow: hidden; /* Ensure the border-radius is applied to child elements */
+    margin-top: 30px;
 }
 
 .search-bar input {
     flex: 1;
-    padding: 8px;
+    padding: 0.6rem;
     border: none;
-    border-radius: 4px;
     outline: none;
-    background-color: #f3f3f3; /* Set input background color */
+    background-color: #fff; /* Set input background color */
 }
 
 .search-bar button {
-    margin-left: 10px;
-    padding: 8px;
+    padding: 0.6rem 1.4rem;
     cursor: pointer;
     border: none;
-    border-radius: 4px;
-    background-color: #3498db;
+    border-radius: 0 3.8rem 3.8rem 0; /* Set the border-radius to match the search bar */
+    background-color: #ffffff;
     color: #fff;
     display: flex;
     align-items: center;
@@ -43,8 +55,12 @@
     margin-right: 4px;
 }
 
+/* Other styles */
 .book-details {
     margin-top: 20px;
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-bottom: 20px;
 }
 
 .book-img {
@@ -58,5 +74,13 @@
     height: auto;
     margin-top: 10px; /* Add a little space between image and details */
 }
-
-/* Add more styles as needed */
+.not-found-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 100px;
+    margin-left: 100px;
+    margin-top: 30px;
+    margin-bottom: 100px;
+}

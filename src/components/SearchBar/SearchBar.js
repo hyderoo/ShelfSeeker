@@ -19,7 +19,7 @@ const SearchBar = () => {
       setSearchTerm(searchText.current.value);
     }
 
-    navigate("/book");
+    navigate("/");
   };
 
   return (

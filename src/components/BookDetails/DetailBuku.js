@@ -61,7 +61,7 @@ const BookDetails = () => {
   return (
     <section className="book-details">
       <div className="container">
-        <button type="button" className="flex flex-c back-btn" onClick={() => navigate('/book')}>
+        <button type="button" className="flex flex-c back-btn" onClick={() => navigate('/')}>
           <FaArrowLeft size={22} />
           <span className="fs-18 fw-6">Back</span>
         </button>

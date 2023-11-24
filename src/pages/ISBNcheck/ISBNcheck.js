@@ -1,15 +1,22 @@
-// ISBNCheck.js
-import React, { useState, useEffect } from 'react';
+// ISBNcheck.js
+import React, { useState, useEffect, useRef } from 'react';
 import './ISBNcheck.css';
+import { FaSearch } from 'react-icons/fa';
 
 const ISBNCheckPage = () => {
   const [isbn, setIsbn] = useState('');
   const [bookData, setBookData] = useState(null);
   const [notFound, setNotFound] = useState(false);
+  const searchText = useRef('');
 
   const handleInputChange = (e) => {
     setIsbn(e.target.value);
-    setNotFound(false); 
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   const handleSearch = () => {
@@ -29,12 +36,6 @@ const ISBNCheckPage = () => {
         setBookData(null);
         setNotFound(true);
       });
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
   };
 
   useEffect(() => {
@@ -57,19 +58,27 @@ const ISBNCheckPage = () => {
   }, [bookData]);
 
   return (
-    <div className="isbn-check-container">
-      <h1>Check the Authenticity</h1>
-      <p>Make sure you're purchasing an authentic copy of your favorite book.</p>
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Enter ISBN"
-          value={isbn}
-          onChange={handleInputChange}
-          onKeyPress={handleKeyPress}
-        />
-        <button onClick={handleSearch}>Search</button>
+    <>
+      <div className='header-content flex flex-c text-center text-white'>
+        <h2 className='header-title text-capitalize'>Check the Authenticity</h2><br />
+        <p className='header-text fs-18 fw-3'>
+          Make sure you're purchasing an authentic copy of your favorite book.
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Enter ISBN"
+              value={isbn}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              ref={searchText}
+            />
+            <button onClick={handleSearch}>
+              <FaSearch className='text-purple' size={32} />
+            </button>
+          </div>
+        </p>
       </div>
+
       {notFound && (
         <div className="not-found-message">
           <p>Your book may not be an original copy. Please double-check the ISBN.</p>
@@ -77,6 +86,7 @@ const ISBNCheckPage = () => {
       )}
       {bookData && (
         <div className="book-details">
+          {/* Render book details here */}
           <div className="book-img">
             <img src={`https://covers.openlibrary.org/b/id/${bookData.covers?.[0]}-L.jpg`} alt="Book Cover" />
           </div>
@@ -89,7 +99,7 @@ const ISBNCheckPage = () => {
           <p><strong>Description:</strong> {bookData.description || 'Description details not available'}</p>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

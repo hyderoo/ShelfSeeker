@@ -1,15 +1,97 @@
-.header-content{
+/* ISBNcheck.css */
+
+/* Container styles */
+.isbn-check-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Search bar container styles */
+.search-bar {
+    display: flex;
+    margin-bottom: 20px;
+    background-color: #f3f3f3;
+    border-radius: 4px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    background-color: #f3f3f3; /* Set input background color */
+}
+
+.search-bar button {
+    margin-left: 10px;
+    padding: 8px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background-color: #3498db;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-bar button img {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+}
+
+/* Book details styles */
+.book-details {
+    margin-top: 20px;
+}
+
+.book-img {
+    max-width: 275px; /* Set the maximum width for the book cover container */
+    margin: 0 auto; /* Center the container */
+}
+
+/* Adjust the cover image size */
+.book-details img {
+    max-width: 100%; /* Make the image responsive */
+    height: auto;
+    margin-top: 10px; /* Add a little space between image and details */
+}
+
+/* Header Styles */
+.header-content {
     min-height: 75vh;
     background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), 
     url("../../assets/background.jpg") center/cover no-repeat;
     flex-direction: column;
+    background-size: cover; /* Ensure the background image covers the container */
 }
-.header-title{
+
+.header-title {
     font-size: 4.2rem;
+    text-align: center; /* Center the text */
 }
-.header-text{
+
+.header-text {
     margin-top: -1.8rem;
     margin-bottom: 2.8rem;
     opacity: 0.8;
     max-width: 770px;
+    text-align: center; /* Center the text */
+}
+
+/* Responsive adjustments for smaller screens */
+@media only screen and (max-width: 600px) {
+    .header-title {
+        font-size: 3rem;
+    }
+
+    .header-text {
+        font-size: 1.4rem;
+    }
 }

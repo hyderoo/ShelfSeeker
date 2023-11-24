@@ -1,23 +1,27 @@
+/* styles.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-:root{
-  --purple-color: #f9efda;
+
+:root {
+  --purple-color: #eb753e;
   --pink-color: #d9176d;
   --grey-color: #f3f3f3;
   --white-color: #fff;
-  --black-color: #010101;;
+  --black-color: #010101;
   --light-black-color: #717171;
   --transition: all 300ms ease-in-out;
 }
 
-*{
+* {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
-html{
+
+html {
   font-size: 10px;
 }
-body{
+
+body {
   font-size: 1.6rem;
   line-height: 1.7;
   font-family: 'Poppins', sans-serif;
@@ -25,98 +29,242 @@ body{
 }
 
 /* resets */
-ul{
+ul {
   list-style-type: none;
 }
-a{
+
+a {
   text-decoration: none;
   color: var(--black-color);
 }
-button{
+
+button {
   outline: 0;
   border: none;
   font-family: inherit;
   background-color: transparent;
   cursor: pointer;
 }
-img{
+
+img {
   width: 100%;
   display: block;
 }
-input{
+
+input {
   border: none;
   outline: 0;
   font-family: inherit;
   font-size: 1.6rem;
 }
-.resize-animation-stopper *{
-  animation: none!important;
-  transition: none!important;
+
+.resize-animation-stopper * {
+  animation: none !important;
+  transition: none !important;
 }
 
 /* backgrounds */
-.bg-pink{background-color: var(--pink-color);}
-.bg-purple{background-color: var(--purple-color);}
-.bg-white{background-color: var(--white-color);}
+.bg-pink {
+  background-color: var(--pink-color);
+}
+
+.bg-purple {
+  background-color: var(--purple-color);
+}
+
+.bg-white {
+  background-color: var(--white-color);
+}
 
 /* text */
-.text-black{color: var(--black-color);}
-.text-white{color: var(--white-color);}
-.text-purple{color: var(--purple-color);}
-.text-light-black{color: var(--light-black-color);}
-.text-uppercase{text-transform: uppercase;}
-.text-center{text-align: center;}
-.text-capitalize{text-transform: capitalize;}
-.text-italic{font-style: italic;}
+.text-black {
+  color: var(--black-color);
+}
+
+.text-white {
+  color: var(--white-color);
+}
+
+.text-purple {
+  color: var(--purple-color);
+}
+
+.text-light-black {
+  color: var(--light-black-color);
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.text-italic {
+  font-style: italic;
+}
 
 /* font weights */
-.fw-3{font-weight: 300;}
-.fw-4{font-weight: 400;}
-.fw-5{font-weight: 500;}
-.fw-6{font-weight: 600;}
-.fw-7{font-weight: 700;}
-.fw-8{font-weight: 800;}
-.fw-9{font-weight: 900;}
+.fw-3 {
+  font-weight: 300;
+}
+
+.fw-4 {
+  font-weight: 400;
+}
+
+.fw-5 {
+  font-weight: 500;
+}
+
+.fw-6 {
+  font-weight: 600;
+}
+
+.fw-7 {
+  font-weight: 700;
+}
+
+.fw-8 {
+  font-weight: 800;
+}
+
+.fw-9 {
+  font-weight: 900;
+}
 
 /* font sizes */
-.fs-15{font-size: 1.5rem;}
-.fs-16{font-size: 1.6rem;}
-.fs-17{font-size: 1.7rem;}
-.fs-18{font-size: 1.8rem;}
-.fs-20{font-size: 2rem;}
-.fs-22{font-size: 2.2rem;}
-.fs-24{font-size: 2.4rem;}
-.fs-26{font-size: 2.6rem;}
+.fs-15 {
+  font-size: 1.5rem;
+}
+
+.fs-16 {
+  font-size: 1.6rem;
+}
+
+.fs-17 {
+  font-size: 1.7rem;
+}
+
+.fs-18 {
+  font-size: 1.8rem;
+}
+
+.fs-20 {
+  font-size: 2rem;
+}
+
+.fs-22 {
+  font-size: 2.2rem;
+}
+
+.fs-24 {
+  font-size: 2.4rem;
+}
+
+.fs-26 {
+  font-size: 2.6rem;
+}
 
 /* letter spacing */
-.ls-1{letter-spacing: 1px;}
-.ls-2{letter-spacing: 2px;}
+.ls-1 {
+  letter-spacing: 1px;
+}
 
-.flex{
+.ls-2 {
+  letter-spacing: 2px;
+}
+
+.flex {
   display: flex;
   align-items: center;
 }
-.flex-column{
+
+.flex-column {
   flex-direction: column;
 }
-.flex-sb{
+
+.flex-sb {
   justify-content: space-between;
 }
-.flex-c{
+
+.flex-c {
   justify-content: center;
 }
-.grid{
+
+.grid {
   display: grid;
 }
-.container{
+
+.container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
 }
 
 /* section title */
-.section-title h2{
+.section-title h2 {
   font-weight: 600;
   text-transform: uppercase;
   padding: 18px 0 24px 0;
+}
+
+.active-link {
+  background-color: rgba(195, 15, 15, 0.2); /* Change the background color for active links */
+}
+
+/* bottom-navbar adjustments */
+.bottom-navbar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--purple-color);
+  color: var(--white-color);
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+  height: 40px; /* Set the desired height for the bottom navbar */
+  z-index: 100; /* Ensure it appears above other elements */
+  overflow: hidden; /* Hide overflowing content on small screens */
+}
+
+.bottom-navbar-content {
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0; /* Adjust the padding as needed */
+}
+
+/* navbar-link adjustments */
+.navbar-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--white-color);
+  text-decoration: none;
+  font-size: 1.2rem; /* Adjust the font size as needed */
+  transition: background-color var(--transition); /* Smooth transition effect */
+  padding: 5px; /* Add padding to improve touchability on mobile devices */
+}
+
+.navbar-link:hover,
+.active-link {
+  background-color: rgba(255, 255, 255, 0.1); /* Highlight on hover and for active links */
+}
+
+.navbar-link span {
+  margin-top: 3px; /* Adjust the margin as needed */
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 600px) {
+  .bottom-navbar {
+    height: 60px; /* Adjust the height for better visibility on small screens */
+  }
+
+  .bottom-navbar-content {
+    padding: 10px 0; /* Adjust the padding as needed */
+  }
 }
