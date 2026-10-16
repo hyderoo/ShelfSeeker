@@ -24,6 +24,9 @@ const AppProvider = ({ children }) => {
     setSlow(false);
   };
 
+  // only refetch when the request URL actually changes (e.g. an invalid year changes nothing)
+  const baseKey = buildSearchUrl(searchTerm, filters, 1);
+
   const fetchPage = useCallback(async (nextPage) => {
     const id = ++requestId.current;
     const append = nextPage > 1;
@@ -32,7 +35,7 @@ const AppProvider = ({ children }) => {
     clearTimeout(slowTimer.current);
     slowTimer.current = setTimeout(() => setSlow(true), 6000);
     try {
-      const data = await apiJson(buildSearchUrl(searchTerm, filters, nextPage));
+      const data = await apiJson(nextPage === 1 ? baseKey : buildSearchUrl(searchTerm, filters, nextPage));
       if (id !== requestId.current) return; // a newer request replaced this one
       const docs = Array.isArray(data.docs) ? data.docs : [];
       const mapped = mapDocs(docs);
@@ -57,7 +60,8 @@ const AppProvider = ({ children }) => {
         setLoadingMore(false);
       }
     }
-  }, [searchTerm, filters]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [baseKey]);
 
   useEffect(() => {
     fetchPage(1);

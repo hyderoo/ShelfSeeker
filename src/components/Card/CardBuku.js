@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useGlobalContext } from '../../appprovider';
 import Book from "../Card/Card";
 import Loading from "../Preloader/Preloader";
@@ -12,10 +12,19 @@ const CardBuku = () => {
     resultTitle, filters, setFilters, facets,
   } = useGlobalContext();
 
+  // the year box waits for a pause in typing so we do not query for "1", "19", "199"...
+  const [yearText, setYearText] = useState(filters.yearFrom);
+  useEffect(() => { setYearText(filters.yearFrom); }, [filters.yearFrom]);
+  useEffect(() => {
+    if (yearText === filters.yearFrom) return undefined;
+    const timer = setTimeout(() => setFilters((prev) => ({ ...prev, yearFrom: yearText })), 500);
+    return () => clearTimeout(timer);
+  }, [yearText, filters.yearFrom, setFilters]);
+
   const setFilter = (key, value) => setFilters((prev) => ({ ...prev, [key]: value }));
   const resetFilters = () => setFilters((prev) => ({ ...EMPTY_FILTERS, sort: prev.sort }));
   const active = filtersActive(filters);
-  const yearInvalid = filters.yearFrom.trim() !== '' && validYear(filters.yearFrom) === null;
+  const yearInvalid = yearText.trim() !== '' && validYear(yearText) === null;
 
   // sort by title happens on the books loaded so far; the other sorts run on the API
   const visibleBooks = useMemo(() => {
@@ -41,16 +50,7 @@ const CardBuku = () => {
     [facets.subjects, filters.subject]
   );
 
-  if (loading) {
-    return (
-      <>
-        <Loading />
-        {slow && <p className='slow-notice' role='status'>OpenLibrary is responding slowly. Still trying...</p>}
-      </>
-    );
-  }
-
-  const showBar = books.length > 0 || active || filters.sort !== 'relevance';
+  const showBar = books.length > 0 || active || filters.sort !== 'relevance' || yearText !== '';
 
   return (
     <section className='booklist'>
@@ -93,8 +93,8 @@ const CardBuku = () => {
                 type='number'
                 min='0'
                 placeholder='Year'
-                value={filters.yearFrom}
-                onChange={(e) => setFilter('yearFrom', e.target.value)}
+                value={yearText}
+                onChange={(e) => setYearText(e.target.value)}
                 aria-label='Filter by earliest publish year'
                 aria-invalid={yearInvalid}
               />
@@ -111,14 +111,14 @@ const CardBuku = () => {
         )}
         {yearInvalid && <p className='filter-hint'>Enter a year with up to 4 digits, for example 1990. The year filter is ignored until then.</p>}
 
-        {error && !error.loadingMore && (
+        {!loading && error && !error.loadingMore && (
           <div className='state-box state-error' role='alert'>
             <p>{error.message}</p>
             <button type='button' className='state-btn' onClick={retry}>Try again</button>
           </div>
         )}
 
-        {!error && books.length === 0 && (
+        {!loading && !error && books.length === 0 && (
           <div className='state-box state-empty'>
             <p>{active
               ? 'No books match these filters.'
@@ -127,7 +127,14 @@ const CardBuku = () => {
           </div>
         )}
 
-        {books.length > 0 && (
+        {loading && (
+          <>
+            <Loading />
+            {slow && <p className='slow-notice' role='status'>OpenLibrary is responding slowly. Still trying...</p>}
+          </>
+        )}
+
+        {!loading && books.length > 0 && (
           <div className='booklist-content grid'>
             {visibleBooks.map((item, index) => (
               <Book key={`${item.id}-${index}`} {...item} />
@@ -142,7 +149,7 @@ const CardBuku = () => {
           </div>
         )}
 
-        {hasMore && !(error && error.loadingMore) && (
+        {!loading && hasMore && !(error && error.loadingMore) && (
           <div className='load-more-wrap'>
             <button type='button' className='state-btn' onClick={loadMore} disabled={loadingMore}>
               {loadingMore ? 'Loading...' : 'Load more books'}
