@@ -10,8 +10,10 @@ const FindingAuthor = () => {
   const [selectedAuthor, setSelectedAuthor] = useState(null);
 
   const handleSearch = async () => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
     try {
-      const response = await fetch(`https://openlibrary.org/search/authors.json?q=${query}`);
+      const response = await fetch(`https://openlibrary.org/search/authors.json?q=${encodeURIComponent(trimmed)}`);
       const data = await response.json();
 
       if (data.numFound > 0) {
@@ -26,10 +28,10 @@ const FindingAuthor = () => {
   };
 
   const handleAuthorClick = (author) => {
-    setSelectedAuthor(author);
+    setSelectedAuthor(author === selectedAuthor ? null : author);
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSearch();
     }
@@ -38,7 +40,7 @@ const FindingAuthor = () => {
   return (
     <>
       <div className='header-content flex flex-c text-center text-white'>
-        <h2 className='header-title text-capitalize'>Find Authors</h2><br />
+        <h2 className='header-title text-capitalize'>Find Authors</h2>
         <p className='header-text fs-18 fw-3'>
           Explore information about your favorite authors. Enter the author's name in the search bar to find details, including birth date and biography.
         </p>
@@ -46,21 +48,31 @@ const FindingAuthor = () => {
           <input
             type="text"
             placeholder="Enter author name"
+            aria-label="Enter author name"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyDown}
           />
-          <button onClick={handleSearch}>
-            <FaSearch className='text-purple' size={32} />
+          <button onClick={handleSearch} aria-label="Search authors">
+            <FaSearch size={20} />
           </button>
         </div>
       </div>
-      <div className="author-results">
+      <div className="author-results container">
         {searchResults.map((author) => (
-          <div key={author.key} className="author-card" onClick={() => handleAuthorClick(author)}>
+          <div
+            key={author.key}
+            className={selectedAuthor === author ? "author-card selected" : "author-card"}
+            onClick={() => handleAuthorClick(author)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleAuthorClick(author); } }}
+            role="button"
+            tabIndex={0}
+            aria-expanded={selectedAuthor === author}
+          >
             <img
               src={`https://covers.openlibrary.org/a/olid/${author.key}-M.jpg`}
-              alt={`${author.name}'s cover`}
+              alt={`Portrait of ${author.name}`}
+              loading="lazy"
               onError={(e) => { e.target.src = defaultAuthorImage }} // Set default image on error
             />
             <div className="author-details">

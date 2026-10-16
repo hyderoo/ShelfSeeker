@@ -20,6 +20,7 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#eb753e",
+  "background_color": "#faf7f2",
+  "description": "Find books, check ISBNs, and explore authors with data from OpenLibrary."
 }

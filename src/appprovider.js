@@ -14,7 +14,7 @@ const AppProvider = ({ children }) => {
   const fetchBooks = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${URL}${searchTerm}`);
+      const response = await fetch(`${URL}${encodeURIComponent(searchTerm)}`);
       const data = await response.json();
       const { docs } = data;
 
@@ -34,7 +34,7 @@ const AppProvider = ({ children }) => {
 
         setBooks(newBooks);
 
-        if (newBooks.length > 1) {
+        if (newBooks.length > 0) {
           setResultTitle("Your Search Result");
         } else {
           setResultTitle("No Search Result Found!");

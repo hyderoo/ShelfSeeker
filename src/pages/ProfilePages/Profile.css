@@ -1,11 +1,19 @@
-/* Default styles for smaller screens */
+/* Profile.css */
+
 .profile {
-    padding: 3rem 0;
+    padding: 5rem 0 7rem 0;
+    background-color: var(--surface-color);
 }
 
 .profile-content {
     gap: 4rem;
     display: grid;
+    background-color: var(--white-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: 3.2rem 2.4rem;
+    align-items: center;
 }
 
 .profile-title {
@@ -13,43 +21,55 @@
 }
 
 .profile-img img {
-    max-width: 700px; 
-    width: 100%; 
+    max-width: 260px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    box-shadow: var(--shadow-md);
 }
 
 .profile-text p {
     margin: 1.8rem 0;
-    opacity: 0.8;
+    opacity: 0.85;
+}
+
+.socialIcons {
+    display: flex;
+    gap: 1.2rem;
+    margin-top: 1rem;
+}
+
+.socialIcons button {
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--grey-color);
+    transition: transform 200ms ease-in-out, background-color 200ms ease-in-out;
+}
+
+.socialIcons button:hover {
+    transform: translateY(-3px);
+    background-color: #fdeadd;
 }
 
 /* Media query for larger screens */
 @media screen and (min-width: 800px) {
     .profile-content {
-        grid-template-columns: 1fr 1fr; /* Adjust column layout for larger screens */
+        grid-template-columns: auto 1fr;
+        padding: 4rem;
     }
 
     .profile-title {
         margin-top: 0;
     }
 
-    .profile-img img {
-        max-width: 240px; /* Adjust the maximum width for larger screens */
-        margin-left: auto; /* Move the image to the right */
-        margin-right: 1rem; /* Add some space between image and text */
-    }
-
     .profile-text {
-        margin-left: 0; /* Adjust the margin to move the text to the left */
         display: flex;
         flex-direction: column;
-    }
-
-    .socialIcons {
-        display: flex;
-        margin-top: 1rem; /* Add some space above social icons */
-    }
-
-    .socialIcons button {
-        margin-right: 1rem; /* Adjust the right margin between social icons */
     }
 }

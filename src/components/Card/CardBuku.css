@@ -1,39 +1,75 @@
+/* CardBuku.css - book grid and book cards */
+
 .booklist, .book-details{
-    padding: 3rem 0;
-    background-color: #f8f9fa;
+    padding: 3rem 0 5rem 0;
+    background-color: var(--surface-color);
 }
+
 .booklist-content{
-    gap: 3rem;
+    gap: 2.4rem;
+    grid-template-columns: repeat(2, 1fr);
 }
+
 .book-item{
-    padding: 3rem 2rem;
-    border-radius: 4px;
+    padding: 2.2rem 1.6rem 1.8rem 1.6rem;
+    border-radius: var(--radius-md);
     background-color: var(--white-color);
-    box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 15px 0px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
     transition: var(--transition);
 }
+
 .book-item:hover{
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
 }
+
+.book-item-img{
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .book-item-img img{
-    max-width: 180px;
-    margin-right: auto;
-    margin-left: auto;
+    width: auto;
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 10px rgba(28, 27, 26, 0.18);
 }
+
 .book-item-info{
-    margin-top: 2rem;
+    margin-top: 1.6rem;
 }
+
 .book-item-info-item.title{
     line-height: 1.4;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.6rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
+
+.book-item-info-item.title a:hover{
+    color: var(--purple-color);
+}
+
 .book-item-info-item.author{
     line-height: 1.4;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
+
 .book-item-info-item:not(.book-item-info-item.title) span:last-child{
     opacity: 0.8;
 }
+
 .book-item-info-item.publish-year{
     opacity: 0.6;
     font-style: italic;
@@ -42,24 +78,18 @@
 
 @media screen and (min-width: 600px){
     .booklist-content{
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media screen and (min-width: 992px){
-    .booklist-content{
         grid-template-columns: repeat(3, 1fr);
     }
-    .book-item-img img{
-        max-width: 150px;
-    }
 }
 
-@media screen and (min-width: 992px){
+@media screen and (min-width: 900px){
     .booklist-content{
         grid-template-columns: repeat(4, 1fr);
     }
-    .book-item-img img{
-        max-width: 120px;
+}
+
+@media screen and (min-width: 1200px){
+    .booklist-content{
+        grid-template-columns: repeat(5, 1fr);
     }
 }

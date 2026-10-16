@@ -1,7 +1,7 @@
 // index.js
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import { AppProvider } from './appprovider';
 import './index.css';
 import Profile from "./pages/ProfilePages/Profile";
@@ -12,23 +12,29 @@ import SplashScreen from './pages/SplashScreen/SplashScreen';
 import FindingAuthor from './pages/FindAuthor/FindAuthor';
 import { HiOutlineHome, HiOutlineSearch, HiOutlineUser, HiOutlineUserGroup } from "react-icons/hi";
 
-
 const BottomNavbar = () => {
+  const links = [
+    { to: "/", label: "Home", icon: <HiOutlineHome size={24} />, end: true },
+    { to: "/isbn-check", label: "ISBN", icon: <HiOutlineSearch size={24} /> },
+    { to: "/find-author", label: "Authors", icon: <HiOutlineUserGroup size={24} /> },
+    { to: "/profile", label: "Profile", icon: <HiOutlineUser size={24} /> },
+  ];
+
   return (
-    <nav className='bottom-navbar'>
-      <div className='container bottom-navbar-content flex'>
-        <Link to="/" className='navbar-link'activeClassName='active-link'>
-          <HiOutlineHome size={30} />
-        </Link>
-        <Link to="isbn-check" className='navbar-link'activeClassName='active-link'>
-          <HiOutlineSearch size={30} />
-        </Link>
-        <Link to="find-author" className='navbar-link'activeClassName='active-link'>
-          <HiOutlineUserGroup size={30} />
-        </Link>
-        <Link to="profile" className='navbar-link'activeClassName='active-link'>
-          <HiOutlineUser size={30} />
-        </Link>
+    <nav className='bottom-navbar' aria-label='Main navigation'>
+      <div className='bottom-navbar-content'>
+        {links.map(({ to, label, icon, end }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            aria-label={label}
+            className={({ isActive }) => isActive ? 'navbar-link active-link' : 'navbar-link'}
+          >
+            {icon}
+            <span>{label}</span>
+          </NavLink>
+        ))}
       </div>
     </nav>
   );
@@ -38,9 +44,10 @@ const App = () => {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setShowSplash(false);
     }, 2000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (

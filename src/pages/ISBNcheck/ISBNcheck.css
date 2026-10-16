@@ -1,86 +1,130 @@
 /* ISBNcheck.css */
 
-/* Container styles */
-.isbn-check-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.isbn-hero {
+    min-height: 52vh;
+    padding: 4rem 2rem;
+    background:
+        linear-gradient(rgba(28, 20, 14, 0.55), rgba(28, 20, 14, 0.35)),
+        url("../../assets/background.jpg") center/cover no-repeat;
+    flex-direction: column;
 }
 
-/* Search bar container styles */
-.search-bar-container {
-    background-color: #f8f8f8; /* Set the background color for the container */
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    margin-top: 50px;
+.isbn-hero .header-title {
+    font-size: 4.2rem;
+    text-align: center;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
 }
 
-/* Search bar styles */
+.isbn-hero .header-text {
+    margin-top: 1.2rem;
+    margin-bottom: 0;
+    max-width: 640px;
+    text-align: center;
+    opacity: 0.92;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Search bar */
 .search-bar {
     display: flex;
-    background-color: #fff; /* Set the background color */
-    border: 2px solid #ffffff; /* Set the border color */
-    border-radius: 3.8rem; /* Set the border-radius */
-    overflow: hidden; /* Ensure the border-radius is applied to child elements */
-    margin-top: 30px;
+    width: 100%;
+    max-width: 480px;
+    margin-top: 3rem;
+    background-color: #fff;
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
 }
 
 .search-bar input {
     flex: 1;
-    padding: 0.6rem;
+    min-width: 0;
+    padding: 1.2rem 2rem;
     border: none;
     outline: none;
-    background-color: #fff; /* Set input background color */
+    background-color: #fff;
+    color: var(--black-color);
 }
 
 .search-bar button {
-    padding: 0.6rem 1.4rem;
+    flex-shrink: 0;
+    width: 5.2rem;
     cursor: pointer;
     border: none;
-    border-radius: 0 3.8rem 3.8rem 0; /* Set the border-radius to match the search bar */
-    background-color: #ffffff;
+    background-color: var(--purple-color);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background-color 200ms ease-in-out;
 }
 
-.search-bar button img {
-    width: 16px;
-    height: 16px;
-    margin-right: 4px;
+.search-bar button:hover {
+    background-color: var(--accent-dark);
 }
 
-/* Other styles */
-.book-details {
-    margin-top: 20px;
-    margin-left: 100px;
-    margin-right: 100px;
-    margin-bottom: 20px;
+/* Result card */
+.isbn-result {
+    max-width: 720px;
+    margin: 3.2rem auto 5rem auto;
+    padding: 2.4rem;
+    background-color: var(--white-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    gap: 2.4rem;
 }
 
-.book-img {
-    max-width: 275px; /* Set the maximum width for the book cover container */
-    margin: 0 auto; /* Center the container */
-}
-
-/* Adjust the cover image size */
-.book-details img {
-    max-width: 100%; /* Make the image responsive */
+.isbn-result .book-img img {
+    max-width: 220px;
+    margin: 0 auto;
     height: auto;
-    margin-top: 10px; /* Add a little space between image and details */
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 20px rgba(28, 27, 26, 0.20);
 }
+
+.isbn-result-info h2 {
+    margin-bottom: 1.2rem;
+}
+
+.isbn-result-info p {
+    margin-bottom: 0.6rem;
+}
+
 .not-found-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-right: 100px;
-    margin-left: 100px;
-    margin-top: 30px;
-    margin-bottom: 100px;
+    max-width: 640px;
+    margin: 3.2rem auto 5rem auto;
+    padding: 2rem 2.4rem;
+    text-align: center;
+    background-color: #fdf3ec;
+    border: 1px solid #f3d9c6;
+    border-radius: var(--radius-md);
+    color: #8a4b1f;
+}
+
+@media screen and (min-width: 640px) {
+    .isbn-result {
+        grid-template-columns: 220px 1fr;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .isbn-hero .header-title {
+        font-size: 2.8rem;
+    }
+
+    .isbn-hero .header-text {
+        font-size: 1.5rem;
+    }
+
+    .isbn-result {
+        margin-left: 1.6rem;
+        margin-right: 1.6rem;
+    }
+
+    .not-found-message {
+        margin-left: 1.6rem;
+        margin-right: 1.6rem;
+    }
 }

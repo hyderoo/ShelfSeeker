@@ -26,11 +26,11 @@ const SearchBar = () => {
     <div className='searchbar'>
       <div className='container'>
         <div className='search-form-content'>
-          <form className='searchbar' onSubmit={handleSubmit}>
+          <form className='searchbar' onSubmit={handleSubmit} role='search'>
             <div className='search-form-elem flex flex-sb bg-white'>
-              <input type = "text" className='form-control' placeholder='Search your fav book' ref = {searchText} />
-              <button type = "submit" className='flex flex-c' onClick={handleSubmit}>
-                <FaSearch className='text-purple' size = {32} />
+              <input type = "text" className='form-control' placeholder='Search your fav book' aria-label='Search books by title' ref = {searchText} />
+              <button type = "submit" className='search-submit-btn' aria-label='Search'>
+                <FaSearch size = {20} />
               </button>
             </div>
           </form>

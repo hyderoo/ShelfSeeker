@@ -32,19 +32,19 @@ const Profile = () => {
 
         <div className='profile-content grid'>
           <div className='profile-img'>
-            <img src={profileImg} alt="" />
+            <img src={profileImg} alt="Portrait of Hafiz Hamdani" />
           </div>
           <div className='profile-text'>
             <h2 className='profile-title fs-26 ls-1'>About me</h2>
             <p className='fs-18 justify'>Hello, I'm Hafiz Hamdani, a student in Computer Engineering at Diponegoro University. My student ID is 21120121140106. I am passionate about exploring the vast world of computer technology, seeking to understand and contribute to the ever-evolving field. As a dedicated learner, I am committed to acquiring new skills and knowledge to make a positive impact in the world of computer science. Feel free to connect with me to share ideas and insights on this exciting journey!</p>
             <div className='socialIcons'>
-              <button onClick={() => handleIconPress('instagram')}>
+              <button onClick={() => handleIconPress('instagram')} aria-label='Instagram profile'>
                 <FaInstagram size={30} color="#405DE6" />
               </button>
-              <button onClick={() => handleIconPress('github')}>
+              <button onClick={() => handleIconPress('github')} aria-label='GitHub profile'>
                 <FaGithub size={30} color="#211F1F" />
               </button>
-              <button onClick={() => handleIconPress('linkedin')}>
+              <button onClick={() => handleIconPress('linkedin')} aria-label='LinkedIn profile'>
                 <FaLinkedin size={30} color="#0077B5" />
               </button>
             </div>
