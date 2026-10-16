@@ -57,11 +57,28 @@ export function mockJson(url) {
   const { pathname, searchParams } = new URL(url);
 
   if (pathname === '/search.json') {
-    const title = (searchParams.get('title') || '').toLowerCase();
-    const docs = title
-      ? BOOKS.filter((b) => b.title.toLowerCase().includes(title) || b.author_name.join(' ').toLowerCase().includes(title))
-      : BOOKS;
-    return Promise.resolve({ numFound: docs.length, docs });
+    let docs = BOOKS;
+    const q = searchParams.get('q');
+    if (q) {
+      const m = (re) => (q.match(re) || [])[1];
+      const title = (m(/title:"([^"]*)"/) || '').toLowerCase();
+      const language = m(/language:(\w+)/);
+      const subject = (m(/subject:"([^"]*)"/) || '').toLowerCase();
+      const year = m(/first_publish_year:\[(\d+) TO/);
+      docs = docs.filter((b) => b.title.toLowerCase().includes(title));
+      if (language) docs = docs.filter((b) => b.language.includes(language));
+      if (subject) docs = docs.filter((b) => b.subject.some((s) => s.toLowerCase() === subject));
+      if (year) docs = docs.filter((b) => b.first_publish_year >= Number(year));
+    } else {
+      const title = (searchParams.get('title') || '').toLowerCase();
+      if (title) docs = docs.filter((b) => b.title.toLowerCase().includes(title) || b.author_name.join(' ').toLowerCase().includes(title));
+    }
+    const sort = searchParams.get('sort');
+    if (sort === 'new') docs = [...docs].sort((a, b) => b.first_publish_year - a.first_publish_year);
+    if (sort === 'old') docs = [...docs].sort((a, b) => a.first_publish_year - b.first_publish_year);
+    const limit = Number(searchParams.get('limit')) || docs.length;
+    const page = Number(searchParams.get('page')) || 1;
+    return Promise.resolve({ numFound: docs.length, docs: docs.slice((page - 1) * limit, page * limit) });
   }
 
   if (pathname === '/search/authors.json') {

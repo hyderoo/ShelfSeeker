@@ -1,6 +1,7 @@
 // readinglist.js - personal reading list stored in localStorage.
 // Three shelves: "want" (Want to read), "reading", "done".
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { mergeItems } from './readinglistIO';
 
 const STORAGE_KEY = 'shelfseeker-reading-list';
 
@@ -48,13 +49,20 @@ export const ReadingListProvider = ({ children }) => {
     });
   };
 
+  // merge imported books into the list; returns { added, updated }
+  const importItems = (imported) => {
+    const result = mergeItems(items, imported);
+    setItems(result.items);
+    return { added: result.added, updated: result.updated };
+  };
+
   const getStatus = (id) => {
     const found = items.find((item) => item.id === id);
     return found ? found.status : null;
   };
 
   return (
-    <ReadingListContext.Provider value={{ items, setStatus, getStatus }}>
+    <ReadingListContext.Provider value={{ items, setStatus, getStatus, importItems }}>
       {children}
     </ReadingListContext.Provider>
   );

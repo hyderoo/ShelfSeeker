@@ -6,7 +6,7 @@ import coverImg from '../../assets/gkadacover.jpg';
 import './DetailBuku.css';
 import { FaArrowLeft, FaBookmark } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { apiJson } from '../../api';
+import { apiJson, describeError } from '../../api';
 import { useReadingList, READING_STATUSES } from '../../readinglist';
 
 const URL = 'https://openlibrary.org/works/';
@@ -16,12 +16,16 @@ const BookDetails = () => {
   const [loading, setLoading] = useState(false);
   const [book, setBook] = useState(null);
   const [similar, setSimilar] = useState([]);
+  const [error, setError] = useState('');
+  const [attempt, setAttempt] = useState(0);
   const navigate = useNavigate();
   const { setStatus, getStatus } = useReadingList();
 
   useEffect(() => {
     setLoading(true);
     setSimilar([]);
+    setError('');
+    setBook(null);
     async function getBookDetails() {
       try {
         const data = await apiJson(`${URL}${id}.json`);
@@ -85,13 +89,30 @@ const BookDetails = () => {
         setLoading(false);
       } catch (error) {
         console.log(error);
+        setError(describeError(error));
         setLoading(false);
       }
     }
     getBookDetails();
-  }, [id]);
+  }, [id, attempt]);
 
-  if (loading || !book) return <Loading />;
+  if (loading) return <Loading />;
+  if (error || !book) {
+    return (
+      <section className="book-details">
+        <div className="container">
+          <button type="button" className="flex flex-c back-btn" onClick={() => navigate('/')}>
+            <FaArrowLeft size={18} />
+            <span className="fs-18 fw-6">Back</span>
+          </button>
+          <div className='state-box state-error' role='alert'>
+            <p>{error || 'This book could not be loaded.'}</p>
+            <button type='button' className='state-btn' onClick={() => setAttempt((n) => n + 1)}>Try again</button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const currentStatus = getStatus(id);
   const listBook = {

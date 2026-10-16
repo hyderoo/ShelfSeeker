@@ -1,16 +1,47 @@
 // ReadingList.js - the user's saved books, grouped by shelf.
 // Data lives in localStorage, so it keeps working offline.
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
 import { useReadingList, READING_STATUSES, statusLabel } from '../../readinglist';
+import { serializeList, parseImport } from '../../readinglistIO';
 import './ReadingList.css';
 
 const TABS = [{ key: 'all', label: 'All' }, ...READING_STATUSES];
 
 const ReadingList = () => {
-  const { items, setStatus } = useReadingList();
+  const { items, setStatus, importItems } = useReadingList();
   const [tab, setTab] = useState('all');
+  const [message, setMessage] = useState(null); // { type: 'ok' | 'error', text }
+  const fileInput = useRef(null);
+
+  const handleExport = () => {
+    const blob = new Blob([serializeList(items)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `shelfseeker-reading-list-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    setMessage({ type: 'ok', text: `Exported ${items.length} book${items.length === 1 ? '' : 's'}.` });
+  };
+
+  const handleImport = async (event) => {
+    const file = event.target.files && event.target.files[0];
+    event.target.value = '';
+    if (!file) return;
+    try {
+      const { items: imported, skipped } = parseImport(await file.text());
+      const { added, updated } = importItems(imported);
+      const parts = [`${added} added`, `${updated} moved to a different shelf`];
+      if (skipped > 0) parts.push(`${skipped} skipped (invalid)`);
+      setMessage({ type: 'ok', text: `Import done: ${parts.join(', ')}.` });
+    } catch (error) {
+      setMessage({ type: 'error', text: error.message || 'Could not read that file.' });
+    }
+  };
 
   const visible = items
     .filter((item) => tab === 'all' || item.status === tab)
@@ -22,6 +53,28 @@ const ReadingList = () => {
         <div className='section-title'>
           <h2>My Reading List</h2>
         </div>
+
+        <div className='list-io'>
+          <button type='button' className='state-btn' onClick={handleExport} disabled={items.length === 0}>
+            Export list
+          </button>
+          <button type='button' className='state-btn secondary' onClick={() => fileInput.current && fileInput.current.click()}>
+            Import list
+          </button>
+          <input
+            ref={fileInput}
+            type='file'
+            accept='application/json,.json'
+            onChange={handleImport}
+            aria-label='Import reading list file'
+            hidden
+          />
+        </div>
+        {message && (
+          <p className={message.type === 'error' ? 'list-io-message error' : 'list-io-message'} role={message.type === 'error' ? 'alert' : 'status'}>
+            {message.text}
+          </p>
+        )}
 
         <div className='shelf-tabs' role='tablist' aria-label='Filter by shelf'>
           {TABS.map(({ key, label }) => (

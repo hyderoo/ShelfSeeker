@@ -9,9 +9,10 @@ This was my final project for the PPB (Pemrograman Perangkat Bergerak / Mobile P
 ## Features
 
 - **Book search** - search millions of books by title, with covers, authors, and first-publish year
-- **Filter and sort results** - sort by year or title, filter by language, subject, and earliest publish year
+- **Filter, sort and paging** - language, subject, earliest publish year and newest/oldest sort are sent to OpenLibrary, so they apply to the whole catalogue, not just the books on screen. "Load more books" fetches the next 30. Title A-Z sorts only the books loaded so far
 - **Book details** - description, subjects, and author for each book, plus similar-book recommendations based on the book's subjects
-- **Reading list** - save books to "Want to read", "Reading", or "Done". Stored in your browser (localStorage), so it works offline and needs no account
+- **Reading list** - save books to "Want to read", "Reading", or "Done". Stored in your browser (localStorage), so it works offline and needs no account. Export the list to a JSON file and import it again (merge by book, imported shelf wins) to back it up or move it to another browser
+- **Clear error states** - search, book detail, ISBN and author pages show a specific message (offline, timeout, server problem, not found) with a "Try again" button instead of a blank screen
 - **ISBN check** - look up a book by ISBN-10/ISBN-13, or point your camera at the barcode to scan it
 - **Author finder** - search authors and see birth date and top work
 - **Dark mode** - toggle in the bottom navigation bar, remembers your choice
@@ -66,8 +67,17 @@ Never use this flag for a production build.
 
 All book, cover, ISBN, and author data comes from [OpenLibrary](https://openlibrary.org) (Internet Archive), a free and open API. Covers are served from `covers.openlibrary.org`.
 
+## Tests
+
+```bash
+CI=true npm test -- --watchAll=false   # unit tests: search URL building, reading list import/export
+```
+
+Browser end-to-end tests live in a separate repo (ShelfSeeker-e2e).
+
 ## Notes
 
 - This is a learning project; the "ISBN authenticity check" is a lookup against OpenLibrary's catalog - a missing ISBN there does not prove a copy is fake.
 - The reading list and theme preference are stored only in your own browser; clearing site data removes them.
 - Offline mode shows pages and covers you have opened before; brand-new searches still need a connection.
+- The filter and sort query syntax (`language:`, `subject:`, `first_publish_year:[X TO *]`, `sort=new|old`) follows the OpenLibrary search API; it has been tested here against recorded fixtures, not the live API.

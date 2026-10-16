@@ -3,16 +3,18 @@ import React, { useState } from 'react';
 import './FindAuthor.css';
 import { FaSearch } from 'react-icons/fa';
 import defaultAuthorImage from '../../assets/gkadacover.jpg'; // Import the default image
-import { apiJson } from '../../api';
+import { apiJson, describeError } from '../../api';
 
 const FindingAuthor = () => {
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [selectedAuthor, setSelectedAuthor] = useState(null);
+  const [status, setStatus] = useState(null); // null | 'empty' | { error: message }
 
   const handleSearch = async () => {
     const trimmed = query.trim();
     if (!trimmed) return;
+    setStatus(null);
     try {
       const data = await apiJson(`https://openlibrary.org/search/authors.json?q=${encodeURIComponent(trimmed)}`);
 
@@ -21,9 +23,12 @@ const FindingAuthor = () => {
         setSelectedAuthor(null);
       } else {
         setSearchResults([]);
+        setStatus('empty');
       }
     } catch (error) {
       console.error('Error fetching authors:', error);
+      setSearchResults([]);
+      setStatus({ error: describeError(error) });
     }
   };
 
@@ -59,6 +64,15 @@ const FindingAuthor = () => {
         </div>
       </div>
       <div className="author-results container">
+        {status === 'empty' && (
+          <div className='state-box state-empty'><p>No authors found for that name. Check the spelling or try a shorter name.</p></div>
+        )}
+        {status && status.error && (
+          <div className='state-box state-error' role='alert'>
+            <p>{status.error}</p>
+            <button type='button' className='state-btn' onClick={handleSearch}>Try again</button>
+          </div>
+        )}
         {searchResults.map((author) => (
           <div
             key={author.key}

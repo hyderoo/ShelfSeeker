@@ -177,3 +177,8 @@
         grid-template-columns: repeat(3, 1fr);
     }
 }
+
+.list-io { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-bottom: 1.6rem; }
+.state-btn.secondary { background-color: transparent; color: var(--purple-color); border: 1px solid var(--purple-color); }
+.list-io-message { text-align: center; font-size: 1.4rem; margin: 0 0 1.6rem; color: var(--light-black-color); }
+.list-io-message.error { color: var(--pink-color); font-weight: 600; }

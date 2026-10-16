@@ -1,81 +1,56 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useGlobalContext } from '../../appprovider';
 import Book from "../Card/Card";
 import Loading from "../Preloader/Preloader";
 import coverImg from "../../assets/gkadacover.jpg";
+import { SORT_OPTIONS, EMPTY_FILTERS, filtersActive, validYear } from '../../search';
 import "./CardBuku.css";
 
-const SORT_OPTIONS = [
-  { key: 'relevance', label: 'Best match' },
-  { key: 'newest', label: 'Newest first' },
-  { key: 'oldest', label: 'Oldest first' },
-  { key: 'title', label: 'Title A-Z' },
-];
-
 const CardBuku = () => {
-  const {books, loading, resultTitle} = useGlobalContext();
-  const [sort, setSort] = useState('relevance');
-  const [language, setLanguage] = useState('all');
-  const [subject, setSubject] = useState('all');
-  const [yearFrom, setYearFrom] = useState('');
+  const {
+    books, loading, loadingMore, slow, error, numFound, hasMore, loadMore, retry,
+    resultTitle, filters, setFilters, facets,
+  } = useGlobalContext();
 
-  // distinct languages and the most common subjects in the current result set
-  const { languageOptions, subjectOptions } = useMemo(() => {
-    const languages = new Set();
-    const subjectCounts = new Map();
-    books.forEach((book) => {
-      (book.languages || []).forEach((l) => languages.add(l));
-      (book.subjects || []).slice(0, 8).forEach((s) => {
-        subjectCounts.set(s, (subjectCounts.get(s) || 0) + 1);
-      });
-    });
-    const sortedSubjects = [...subjectCounts.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 15)
-      .map(([name]) => name)
-      .sort();
-    return {
-      languageOptions: [...languages].sort(),
-      subjectOptions: sortedSubjects,
-    };
-  }, [books]);
+  const setFilter = (key, value) => setFilters((prev) => ({ ...prev, [key]: value }));
+  const resetFilters = () => setFilters((prev) => ({ ...EMPTY_FILTERS, sort: prev.sort }));
+  const active = filtersActive(filters);
+  const yearInvalid = filters.yearFrom.trim() !== '' && validYear(filters.yearFrom) === null;
 
+  // sort by title happens on the books loaded so far; the other sorts run on the API
   const visibleBooks = useMemo(() => {
     let list = books.map((singleBook) => ({
       ...singleBook,
       id: (singleBook.id).replace("/works/", ""),
       cover_img: singleBook.cover_id ? `https://covers.openlibrary.org/b/id/${singleBook.cover_id}-L.jpg` : coverImg
     }));
-
-    if (language !== 'all') {
-      list = list.filter((book) => (book.languages || []).includes(language));
-    }
-    if (subject !== 'all') {
-      list = list.filter((book) => (book.subjects || []).includes(subject));
-    }
-    if (yearFrom.trim() !== '' && !Number.isNaN(Number(yearFrom))) {
-      const from = Number(yearFrom);
-      list = list.filter((book) => book.first_publish_year && book.first_publish_year >= from);
-    }
-
-    if (sort === 'newest') {
-      list = [...list].sort((a, b) => (b.first_publish_year || 0) - (a.first_publish_year || 0));
-    } else if (sort === 'oldest') {
-      list = [...list].sort((a, b) => (a.first_publish_year || 9999) - (b.first_publish_year || 9999));
-    } else if (sort === 'title') {
+    if (filters.sort === 'title') {
       list = [...list].sort((a, b) => (a.title || '').localeCompare(b.title || ''));
     }
     return list;
-  }, [books, sort, language, subject, yearFrom]);
+  }, [books, filters.sort]);
 
-  const filtersActive = language !== 'all' || subject !== 'all' || yearFrom.trim() !== '';
-  const resetFilters = () => {
-    setLanguage('all');
-    setSubject('all');
-    setYearFrom('');
-  };
+  const languageOptions = useMemo(
+    () => (filters.language !== 'all' && !facets.languages.includes(filters.language)
+      ? [...facets.languages, filters.language] : facets.languages),
+    [facets.languages, filters.language]
+  );
+  const subjectOptions = useMemo(
+    () => (filters.subject !== 'all' && !facets.subjects.includes(filters.subject)
+      ? [...facets.subjects, filters.subject] : facets.subjects),
+    [facets.subjects, filters.subject]
+  );
 
-  if(loading) return <Loading />;
+  if (loading) {
+    return (
+      <>
+        <Loading />
+        {slow && <p className='slow-notice' role='status'>OpenLibrary is responding slowly. Still trying...</p>}
+      </>
+    );
+  }
+
+  const showBar = books.length > 0 || active || filters.sort !== 'relevance';
 
   return (
     <section className='booklist'>
@@ -84,11 +59,11 @@ const CardBuku = () => {
           <h2>{resultTitle}</h2>
         </div>
 
-        {books.length > 0 && (
+        {showBar && (
           <div className='filter-bar' aria-label='Filter and sort results'>
             <label>
               <span>Sort</span>
-              <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label='Sort results'>
+              <select value={filters.sort} onChange={(e) => setFilter('sort', e.target.value)} aria-label='Sort results'>
                 {SORT_OPTIONS.map(({ key, label }) => (
                   <option key={key} value={key}>{label}</option>
                 ))}
@@ -96,7 +71,7 @@ const CardBuku = () => {
             </label>
             <label>
               <span>Language</span>
-              <select value={language} onChange={(e) => setLanguage(e.target.value)} aria-label='Filter by language'>
+              <select value={filters.language} onChange={(e) => setFilter('language', e.target.value)} aria-label='Filter by language'>
                 <option value='all'>All</option>
                 {languageOptions.map((l) => (
                   <option key={l} value={l}>{l.toUpperCase()}</option>
@@ -105,7 +80,7 @@ const CardBuku = () => {
             </label>
             <label>
               <span>Subject</span>
-              <select value={subject} onChange={(e) => setSubject(e.target.value)} aria-label='Filter by subject'>
+              <select value={filters.subject} onChange={(e) => setFilter('subject', e.target.value)} aria-label='Filter by subject'>
                 <option value='all'>All</option>
                 {subjectOptions.map((s) => (
                   <option key={s} value={s}>{s}</option>
@@ -118,33 +93,61 @@ const CardBuku = () => {
                 type='number'
                 min='0'
                 placeholder='Year'
-                value={yearFrom}
-                onChange={(e) => setYearFrom(e.target.value)}
+                value={filters.yearFrom}
+                onChange={(e) => setFilter('yearFrom', e.target.value)}
                 aria-label='Filter by earliest publish year'
+                aria-invalid={yearInvalid}
               />
             </label>
-            {filtersActive && (
+            {active && (
               <button type='button' className='filter-reset' onClick={resetFilters}>
                 Reset
               </button>
             )}
             <span className='filter-count' aria-live='polite'>
-              {visibleBooks.length} of {books.length} books
+              {books.length} of {numFound.toLocaleString('en-US')} books
             </span>
           </div>
         )}
+        {yearInvalid && <p className='filter-hint'>Enter a year with up to 4 digits, for example 1990. The year filter is ignored until then.</p>}
 
-        {visibleBooks.length === 0 && books.length > 0 ? (
-          <p className='filter-empty'>No books match these filters. <button type='button' className='filter-reset' onClick={resetFilters}>Reset filters</button></p>
-        ) : (
+        {error && !error.loadingMore && (
+          <div className='state-box state-error' role='alert'>
+            <p>{error.message}</p>
+            <button type='button' className='state-btn' onClick={retry}>Try again</button>
+          </div>
+        )}
+
+        {!error && books.length === 0 && (
+          <div className='state-box state-empty'>
+            <p>{active
+              ? 'No books match these filters.'
+              : 'No books found for that search. Check the spelling or try another title.'}</p>
+            {active && <button type='button' className='filter-reset' onClick={resetFilters}>Reset filters</button>}
+          </div>
+        )}
+
+        {books.length > 0 && (
           <div className='booklist-content grid'>
-            {
-              visibleBooks.slice(0, 30).map((item, index) => {
-                return (
-                  <Book key = {index} {...item} />
-                )
-              })
-            }
+            {visibleBooks.map((item, index) => (
+              <Book key={`${item.id}-${index}`} {...item} />
+            ))}
+          </div>
+        )}
+
+        {error && error.loadingMore && (
+          <div className='state-box state-error' role='alert'>
+            <p>{error.message}</p>
+            <button type='button' className='state-btn' onClick={retry}>Try again</button>
+          </div>
+        )}
+
+        {hasMore && !(error && error.loadingMore) && (
+          <div className='load-more-wrap'>
+            <button type='button' className='state-btn' onClick={loadMore} disabled={loadingMore}>
+              {loadingMore ? 'Loading...' : 'Load more books'}
+            </button>
+            {loadingMore && slow && <p className='slow-notice' role='status'>OpenLibrary is responding slowly. Still trying...</p>}
           </div>
         )}
       </div>

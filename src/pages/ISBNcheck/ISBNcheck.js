@@ -4,13 +4,15 @@ import './ISBNcheck.css';
 import { FaSearch, FaCamera } from 'react-icons/fa';
 import BarcodeScanner, { isBarcodeScanSupported } from '../../components/BarcodeScanner/BarcodeScanner';
 import coverImg from '../../assets/gkadacover.jpg';
-import { apiJson } from '../../api';
+import { apiJson, describeError } from '../../api';
 
 const ISBNCheckPage = () => {
   const [isbn, setIsbn] = useState('');
   const [bookData, setBookData] = useState(null);
   const [authorName, setAuthorName] = useState('');
   const [notFound, setNotFound] = useState(false);
+  const [lookupError, setLookupError] = useState('');
+  const [lastQuery, setLastQuery] = useState('');
   const [scanning, setScanning] = useState(false);
   const [scanNotice, setScanNotice] = useState('');
   const searchText = useRef(null);
@@ -31,11 +33,14 @@ const ISBNCheckPage = () => {
     const query = (typeof override === 'string' ? override : isbn).trim();
     if (!query) return;
 
+    setLastQuery(query);
+    setLookupError('');
     apiJson(`https://openlibrary.org/isbn/${encodeURIComponent(query)}.json`)
       .then(data => {
         setBookData(data);
         setAuthorName('');
         setNotFound(false);
+        setLookupError('');
 
         // fetch the first author's name once, in a separate state
         const authorKey = data.authors?.[0]?.key;
@@ -52,7 +57,12 @@ const ISBNCheckPage = () => {
       .catch(error => {
         console.error('Error fetching book data:', error);
         setBookData(null);
-        setNotFound(true);
+        if (error && error.kind === 'notfound') {
+          setNotFound(true);
+        } else {
+          setNotFound(false);
+          setLookupError(describeError(error));
+        }
       });
   };
 
@@ -105,9 +115,15 @@ const ISBNCheckPage = () => {
         )}
       </div>
 
+      {lookupError && (
+        <div className='state-box state-error' role='alert'>
+          <p>{lookupError}</p>
+          <button type='button' className='state-btn' onClick={() => handleSearch(lastQuery)}>Try again</button>
+        </div>
+      )}
       {notFound && (
         <div className="not-found-message">
-          <p>Your book may not be an original copy. Please double-check the ISBN.</p>
+          <p>This ISBN is not in the OpenLibrary catalogue. That does not prove a copy is fake - double-check the number and try again.</p>
         </div>
       )}
       {bookData && (
