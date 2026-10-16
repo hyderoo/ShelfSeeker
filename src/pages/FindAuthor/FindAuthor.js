@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import './FindAuthor.css';
 import { FaSearch } from 'react-icons/fa';
 import defaultAuthorImage from '../../assets/gkadacover.jpg'; // Import the default image
+import { apiJson } from '../../api';
 
 const FindingAuthor = () => {
   const [query, setQuery] = useState('');
@@ -13,8 +14,7 @@ const FindingAuthor = () => {
     const trimmed = query.trim();
     if (!trimmed) return;
     try {
-      const response = await fetch(`https://openlibrary.org/search/authors.json?q=${encodeURIComponent(trimmed)}`);
-      const data = await response.json();
+      const data = await apiJson(`https://openlibrary.org/search/authors.json?q=${encodeURIComponent(trimmed)}`);
 
       if (data.numFound > 0) {
         setSearchResults(data.docs);

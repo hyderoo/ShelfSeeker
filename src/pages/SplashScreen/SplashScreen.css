@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #fff; /* Set background color as needed */
+    background-color: var(--surface-color);
   }
   
   .logo {

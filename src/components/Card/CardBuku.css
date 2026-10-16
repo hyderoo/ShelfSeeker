@@ -13,7 +13,7 @@
 .book-item{
     padding: 2.2rem 1.6rem 1.8rem 1.6rem;
     border-radius: var(--radius-md);
-    background-color: var(--white-color);
+    background-color: var(--card-color);
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
@@ -92,4 +92,73 @@
     .booklist-content{
         grid-template-columns: repeat(5, 1fr);
     }
+}
+
+/* filter and sort bar above the results */
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1.2rem;
+    margin-bottom: 2.4rem;
+    padding: 1.4rem 1.6rem;
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.filter-bar label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+}
+
+.filter-bar select,
+.filter-bar input {
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    color: var(--black-color);
+    font-family: inherit;
+    font-size: 1.4rem;
+    min-width: 130px;
+}
+
+.filter-bar input {
+    width: 110px;
+    min-width: 0;
+}
+
+.filter-reset {
+    padding: 0.7rem 1.6rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--purple-color);
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.filter-reset:hover {
+    background-color: var(--accent-dark);
+}
+
+.filter-count {
+    margin-left: auto;
+    font-size: 1.3rem;
+    opacity: 0.7;
+    align-self: center;
+}
+
+.filter-empty {
+    text-align: center;
+    padding: 2.4rem;
+    opacity: 0.85;
 }

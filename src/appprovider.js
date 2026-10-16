@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useCallback } from 'react';
+import { apiJson } from './api';
 
 const URL = "https://openlibrary.org/search.json?title=";
 
@@ -14,13 +15,13 @@ const AppProvider = ({ children }) => {
   const fetchBooks = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${URL}${encodeURIComponent(searchTerm)}`);
-      const data = await response.json();
+      const data = await apiJson(`${URL}${encodeURIComponent(searchTerm)}`);
       const { docs } = data;
 
       if (docs) {
-        const newBooks = docs.slice(0, 20).map((bookSingle) => {
-          const { key, author_name, cover_i, edition_count, first_publish_year, title } = bookSingle;
+        // keep subject and language too - the filter bar needs them
+        const newBooks = docs.slice(0, 60).map((bookSingle) => {
+          const { key, author_name, cover_i, edition_count, first_publish_year, title, subject, language } = bookSingle;
 
           return {
             id: key,
@@ -28,7 +29,9 @@ const AppProvider = ({ children }) => {
             cover_id: cover_i,
             edition_count: edition_count,
             first_publish_year: first_publish_year,
-            title: title
+            title: title,
+            subjects: Array.isArray(subject) ? subject : [],
+            languages: Array.isArray(language) ? language : [],
           };
         });
 
@@ -46,6 +49,8 @@ const AppProvider = ({ children }) => {
       setLoading(false);
     } catch (error) {
       console.log(error);
+      setBooks([]);
+      setResultTitle("Could not load books. Check your connection and try again.");
       setLoading(false);
     }
   }, [searchTerm]);

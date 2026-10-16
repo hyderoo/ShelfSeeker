@@ -11,7 +11,7 @@
     margin-bottom: 2.6rem;
     padding: 0.8rem 1.6rem;
     border-radius: var(--radius-pill);
-    background-color: var(--white-color);
+    background-color: var(--card-color);
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
@@ -24,7 +24,7 @@
 
 .book-details-content{
     gap: 4rem;
-    background-color: var(--white-color);
+    background-color: var(--card-color);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
@@ -62,5 +62,109 @@
         grid-template-columns: minmax(220px, 2fr) 3fr;
         gap: 4rem;
         padding: 3.2rem;
+    }
+}
+
+/* reading list controls on the detail page */
+.reading-list-controls {
+    margin-top: 2rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.reading-list-controls-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.reading-list-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.shelf-btn {
+    padding: 0.8rem 1.8rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    color: var(--black-color);
+    font-size: 1.4rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.shelf-btn:hover {
+    border-color: var(--purple-color);
+    color: var(--purple-color);
+}
+
+.shelf-btn.active {
+    background-color: var(--purple-color);
+    border-color: var(--purple-color);
+    color: #fff;
+}
+
+/* similar books row */
+.similar-books {
+    margin-top: 4rem;
+}
+
+.similar-grid {
+    gap: 1.6rem;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.similar-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.4rem;
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.similar-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+}
+
+.similar-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.6rem;
+}
+
+.similar-card-title {
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.similar-card-author {
+    font-size: 1.3rem;
+    opacity: 0.7;
+}
+
+@media screen and (min-width: 640px) {
+    .similar-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .similar-grid {
+        grid-template-columns: repeat(6, 1fr);
     }
 }

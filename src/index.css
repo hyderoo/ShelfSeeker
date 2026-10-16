@@ -7,6 +7,7 @@
   --pink-color: #d9176d;
   --grey-color: #f3f3f3;
   --white-color: #fff;
+  --card-color: #fff;
   --black-color: #1c1b1a;
   --light-black-color: #717171;
   --surface-color: #faf7f2;
@@ -94,7 +95,7 @@ input:focus-visible {
 }
 
 .bg-white {
-  background-color: var(--white-color);
+  background-color: var(--card-color);
 }
 
 /* text */
@@ -210,7 +211,7 @@ input:focus-visible {
   width: 100%;
   height: calc(var(--navbar-height) + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  background-color: var(--white-color);
+  background-color: var(--card-color);
   border-top: 1px solid var(--border-color);
   box-shadow: 0 -4px 16px rgba(28, 27, 26, 0.08);
   z-index: 100;
@@ -246,4 +247,61 @@ input:focus-visible {
 .navbar-link.active-link {
   color: var(--purple-color);
   box-shadow: inset 0 3px 0 0 var(--purple-color);
+}
+
+/* dark theme tokens */
+[data-theme='dark'] {
+  color-scheme: dark;
+  --card-color: #26221a;        /* card and panel surfaces */
+  --black-color: #f3ede3;       /* primary text */
+  --light-black-color: #b5ab9b; /* secondary text */
+  --surface-color: #17140e;     /* page background */
+  --grey-color: #322d23;
+  --border-color: #3d3629;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme='dark'] body {
+  background-color: var(--surface-color);
+}
+
+body {
+  transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+[data-theme='dark'] .book-item-img img,
+[data-theme='dark'] .saved-book-cover img {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] .not-found-message {
+  background-color: #33231a;
+  border-color: #5a3a24;
+  color: #f0b98d;
+}
+
+[data-theme='dark'] .socialIcons button:hover {
+  background-color: #3d3423;
+}
+
+/* theme toggle sits inside the bottom navbar */
+.theme-toggle {
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* offline notice */
+.offline-banner {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  text-align: center;
+  padding: 0.8rem 1.6rem;
+  background-color: var(--black-color);
+  color: var(--surface-color);
+  font-size: 1.3rem;
+  font-weight: 500;
 }

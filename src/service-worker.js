@@ -11,7 +11,7 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
 
 clientsClaim();
 
@@ -57,6 +57,29 @@ registerRoute(
       // Ensure that once this runtime cache reaches a maximum size the
       // least-recently used images are removed.
       new ExpirationPlugin({ maxEntries: 50 }),
+    ],
+  })
+);
+
+// OpenLibrary book covers: cache first, they never change for a given id.
+registerRoute(
+  ({ url }) => url.origin === 'https://covers.openlibrary.org',
+  new CacheFirst({
+    cacheName: 'openlibrary-covers',
+    plugins: [
+      new ExpirationPlugin({ maxEntries: 200, maxAgeSeconds: 30 * 24 * 60 * 60 }),
+    ],
+  })
+);
+
+// OpenLibrary API responses (search, works, ISBN, authors, subjects):
+// stale-while-revalidate, so pages the user already viewed still open offline.
+registerRoute(
+  ({ url }) => url.origin === 'https://openlibrary.org',
+  new StaleWhileRevalidate({
+    cacheName: 'openlibrary-api',
+    plugins: [
+      new ExpirationPlugin({ maxEntries: 150, maxAgeSeconds: 7 * 24 * 60 * 60 }),
     ],
   })
 );

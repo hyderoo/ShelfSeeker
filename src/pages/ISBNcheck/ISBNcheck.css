@@ -30,7 +30,7 @@
     width: 100%;
     max-width: 480px;
     margin-top: 3rem;
-    background-color: #fff;
+    background-color: var(--card-color);
     border-radius: var(--radius-pill);
     overflow: hidden;
     box-shadow: var(--shadow-md);
@@ -42,7 +42,7 @@
     padding: 1.2rem 2rem;
     border: none;
     outline: none;
-    background-color: #fff;
+    background-color: var(--card-color);
     color: var(--black-color);
 }
 
@@ -68,7 +68,7 @@
     max-width: 720px;
     margin: 3.2rem auto 5rem auto;
     padding: 2.4rem;
-    background-color: var(--white-color);
+    background-color: var(--card-color);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
@@ -127,4 +127,34 @@
         margin-left: 1.6rem;
         margin-right: 1.6rem;
     }
+}
+
+/* camera scan controls */
+.scan-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 1.6rem;
+    padding: 1rem 2.2rem;
+    border-radius: var(--radius-pill);
+    background-color: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+    transition: var(--transition);
+}
+
+.scan-toggle-btn:hover {
+    background-color: rgba(255, 255, 255, 0.28);
+}
+
+.scan-notice {
+    margin-top: 1.4rem;
+    max-width: 480px;
+    font-size: 1.4rem;
+    background-color: rgba(0, 0, 0, 0.35);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.4rem;
 }

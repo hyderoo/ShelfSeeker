@@ -1,14 +1,21 @@
 // ISBNcheck.js
 import React, { useState, useRef } from 'react';
 import './ISBNcheck.css';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaCamera } from 'react-icons/fa';
+import BarcodeScanner, { isBarcodeScanSupported } from '../../components/BarcodeScanner/BarcodeScanner';
+import coverImg from '../../assets/gkadacover.jpg';
+import { apiJson } from '../../api';
 
 const ISBNCheckPage = () => {
   const [isbn, setIsbn] = useState('');
   const [bookData, setBookData] = useState(null);
   const [authorName, setAuthorName] = useState('');
   const [notFound, setNotFound] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const [scanNotice, setScanNotice] = useState('');
   const searchText = useRef(null);
+
+  const scannerSupported = isBarcodeScanSupported();
 
   const handleInputChange = (e) => {
     setIsbn(e.target.value);
@@ -20,17 +27,11 @@ const ISBNCheckPage = () => {
     }
   };
 
-  const handleSearch = () => {
-    const query = isbn.trim();
+  const handleSearch = (override) => {
+    const query = (typeof override === 'string' ? override : isbn).trim();
     if (!query) return;
 
-    fetch(`https://openlibrary.org/isbn/${query}.json`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Book not found');
-        }
-        return response.json();
-      })
+    apiJson(`https://openlibrary.org/isbn/${encodeURIComponent(query)}.json`)
       .then(data => {
         setBookData(data);
         setAuthorName('');
@@ -39,8 +40,7 @@ const ISBNCheckPage = () => {
         // fetch the first author's name once, in a separate state
         const authorKey = data.authors?.[0]?.key;
         if (authorKey) {
-          fetch(`https://openlibrary.org${authorKey}.json`)
-            .then(response => response.json())
+          apiJson(`https://openlibrary.org${authorKey}.json`)
             .then(authorDetails => {
               setAuthorName(authorDetails.name || '');
             })
@@ -54,6 +54,21 @@ const ISBNCheckPage = () => {
         setBookData(null);
         setNotFound(true);
       });
+  };
+
+  const handleScanClick = () => {
+    if (!scannerSupported) {
+      setScanNotice('This browser does not support barcode scanning. Type the ISBN manually below instead.');
+      return;
+    }
+    setScanNotice('');
+    setScanning(true);
+  };
+
+  const handleDetected = (code) => {
+    setScanning(false);
+    setIsbn(code);
+    handleSearch(code);
   };
 
   return (
@@ -73,10 +88,21 @@ const ISBNCheckPage = () => {
             onKeyDown={handleKeyDown}
             ref={searchText}
           />
-          <button onClick={handleSearch} aria-label="Check ISBN">
+          <button onClick={() => handleSearch()} aria-label="Check ISBN">
             <FaSearch size={20} />
           </button>
         </div>
+        <button type='button' className='scan-toggle-btn' onClick={handleScanClick}>
+          <FaCamera size={18} />
+          <span>Scan barcode with camera</span>
+        </button>
+        {scanNotice && <p className='scan-notice'>{scanNotice}</p>}
+        {scanning && (
+          <BarcodeScanner
+            onDetected={handleDetected}
+            onClose={() => setScanning(false)}
+          />
+        )}
       </div>
 
       {notFound && (
@@ -87,7 +113,7 @@ const ISBNCheckPage = () => {
       {bookData && (
         <div className="isbn-result">
           <div className="book-img">
-            <img src={`https://covers.openlibrary.org/b/id/${bookData.covers?.[0]}-L.jpg`} alt={`Cover of ${bookData.title || 'book'}`} />
+            <img src={bookData.covers?.[0] ? `https://covers.openlibrary.org/b/id/${bookData.covers[0]}-L.jpg` : coverImg} alt={`Cover of ${bookData.title || 'book'}`} />
           </div>
           <div className="isbn-result-info">
             <h2>{bookData.title}</h2>
