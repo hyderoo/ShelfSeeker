@@ -100,9 +100,6 @@ const FindingAuthor = () => {
             </div>
           </div>
         ))}
-        {searchResults.length === 0 && query && (
-          <p className="not-found-message">Author "{query}" not found</p>
-        )}
       </div>
     </>
   );
