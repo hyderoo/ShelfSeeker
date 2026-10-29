@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "shelf-seeker.vercel.app"
+        }
+      ],
+      "destination": "https://shelfseeker.web.id/:path*",
+      "permanent": true
+    }
+  ]
+}
