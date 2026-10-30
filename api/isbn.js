@@ -16,7 +16,7 @@
 const UPSTREAM = 'https://dapi.kakao.com/v3/search/book?target=isbn&size=1&query=';
 const PER_IP_LIMIT = 30;          // requests per minute per IP
 const PER_IP_WINDOW_MS = 60 * 1000;
-const DAILY_GUARD = 2000;         // global calls/day guard, kept well under the free quota
+const DAILY_GUARD = 800;          // global calls/day guard: Kakao book search free quota is 30,000/MONTH (official quota doc), so a per-day guard of 800 (~24k/month worst case) keeps sustained use free
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const CACHE_MAX = 500;
 
