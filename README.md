@@ -62,9 +62,11 @@ REACT_APP_MOCK_API=true npm start
 
 Never use this flag for a production build.
 
-## Data source
+## Data sources
 
-All book, cover, ISBN, and author data comes from [OpenLibrary](https://openlibrary.org) (Internet Archive), a free and open API. Covers are served from `covers.openlibrary.org`.
+Primary book, cover, ISBN, and author data comes from [OpenLibrary](https://openlibrary.org) (Internet Archive), a free and open API. Covers are served from `covers.openlibrary.org`.
+
+The ISBN lookup page can also fall back to the [Kakao (Daum) Book API](https://developers.kakao.com/docs/latest/en/daum-search/dev-guide) for books OpenLibrary does not carry. That fallback goes through the same-origin serverless proxy in `api/isbn.js` and only activates when the `KAKAO_REST_API_KEY` environment variable is set in the Vercel project - the key stays server-side and is never shipped to the browser. Without it, the ISBN page works exactly as before.
 
 ## Notes
 

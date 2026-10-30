@@ -14,6 +14,7 @@ const ISBNCheckPage = () => {
   // 'network' (lookup request failed), or '' (no error)
   const [errorKind, setErrorKind] = useState('');
   const [lastQuery, setLastQuery] = useState('');
+  const [fallbackData, setFallbackData] = useState(null);
   const [scanning, setScanning] = useState(false);
   const [scanNotice, setScanNotice] = useState('');
   const searchText = useRef(null);
@@ -56,16 +57,19 @@ const ISBNCheckPage = () => {
     if (!isValidIsbn(query)) {
       setBookData(null);
       setAuthorName('');
+      setFallbackData(null);
       setErrorKind('invalid');
       setLastQuery('');
       return;
     }
     setLastQuery(query);
+    setFallbackData(null);
 
     apiJson(`https://openlibrary.org/isbn/${encodeURIComponent(query)}.json`)
       .then(data => {
         setBookData(data);
         setAuthorName('');
+        setFallbackData(null);
         setErrorKind('');
 
         // fetch the first author's name once, in a separate state
@@ -84,9 +88,24 @@ const ISBNCheckPage = () => {
         console.error('Error fetching book data:', error);
         setBookData(null);
         setAuthorName('');
-        // Open Library answers 404 when the ISBN simply isn't in its catalog -
-        // that says nothing about whether the book is an original copy.
-        setErrorKind(error && error.status === 404 ? 'not-found' : 'network');
+        if (!(error && error.status === 404)) {
+          setErrorKind('network');
+          return;
+        }
+        // Open Library doesn't carry every edition (many Korean books are absent).
+        // Try the keyed fallback catalog through our same-origin proxy before
+        // declaring a catalog gap.
+        apiJson(`/api/isbn?isbn=${encodeURIComponent(query)}`)
+          .then(data => {
+            setFallbackData(data);
+            setErrorKind('');
+          })
+          .catch(fallbackError => {
+            console.error('Fallback catalog lookup failed:', fallbackError);
+            // Open Library answers 404 when the ISBN simply isn't in its catalog -
+            // that says nothing about whether the book is an original copy.
+            setErrorKind('not-found');
+          });
       });
   };
 
@@ -110,7 +129,7 @@ const ISBNCheckPage = () => {
       <div className='header-content isbn-hero flex flex-c text-center text-white'>
         <h2 className='header-title text-capitalize'>Check a Book's ISBN</h2>
         <p className='header-text fs-18 fw-3'>
-          Scan or type a book's ISBN barcode to look it up in the Open Library catalog.
+          Scan or type a book's ISBN barcode to look it up in book catalogs.
         </p>
         <div className="search-bar">
           <input
@@ -158,6 +177,26 @@ const ISBNCheckPage = () => {
       {errorKind === 'network' && (
         <div className="not-found-message">
           <p>Couldn't reach the book database. Check your connection and try again.</p>
+        </div>
+      )}
+      {fallbackData && (
+        <div className="isbn-result">
+          <div className="book-img">
+            <img src={fallbackData.coverUrl || coverImg} alt={`Cover of ${fallbackData.title || 'book'}`} />
+          </div>
+          <div className="isbn-result-info">
+            <p className="isbn-result-source">Found in the Kakao Book (Daum) catalog.</p>
+            <h2>{fallbackData.title}</h2>
+            <p><strong>ISBN-13:</strong> {fallbackData.isbn13 || 'Not available'}</p>
+            <p><strong>ISBN-10:</strong> {fallbackData.isbn10 || 'Not available'}</p>
+            <p><strong>Author:</strong> {fallbackData.authors?.length ? fallbackData.authors.join(', ') : 'Author details not available'}</p>
+            <p><strong>Publisher:</strong> {fallbackData.publisher || 'Publisher details not available'}</p>
+            <p><strong>Release Year:</strong> {fallbackData.publishDate || 'Release Year details not available'}</p>
+            <p><strong>Description:</strong> {fallbackData.description || 'Description details not available'}</p>
+            {fallbackData.url && (
+              <p><a href={fallbackData.url} target="_blank" rel="noopener noreferrer">View on Daum Book</a></p>
+            )}
+          </div>
         </div>
       )}
       {bookData && (

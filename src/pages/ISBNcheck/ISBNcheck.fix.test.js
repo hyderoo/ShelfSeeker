@@ -85,3 +85,47 @@ test('successful lookup does not show external lookups', async () => {
   await waitFor(() => expect(screen.getByText(/Found in the Open Library catalog/i)).toBeInTheDocument());
   expect(screen.queryByRole('link', { name: 'Google Books' })).not.toBeInTheDocument();
 });
+
+test('Open Library miss falls back to the keyed proxy catalog with source label', async () => {
+  apiJson.mockImplementation((url) => {
+    if (url.includes('openlibrary.org')) {
+      return Promise.reject(Object.assign(new Error('Request failed with status 404'), { status: 404 }));
+    }
+    if (url.startsWith('/api/isbn')) {
+      return Promise.resolve({
+        source: 'kakao', title: '자몽살구클럽', authors: ['한로로'], publisher: '어센틱',
+        publishDate: '2025-07-25', isbn13: '9791199305304', isbn10: '1199305308',
+        description: 'desc', coverUrl: '', url: 'https://book.daum.net/example',
+      });
+    }
+    return Promise.reject(new Error('unexpected url ' + url));
+  });
+  render(<ISBNCheckPage />);
+  search('9791199305304');
+  await waitFor(() => expect(screen.getByText(/Found in the Kakao Book \(Daum\) catalog/i)).toBeInTheDocument());
+  expect(screen.getByText('자몽살구클럽')).toBeInTheDocument();
+  expect(screen.getByText('한로로')).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'View on Daum Book' })).toHaveAttribute('href', 'https://book.daum.net/example');
+  expect(screen.queryByText(/isn't in the Open Library catalog/i)).not.toBeInTheDocument();
+});
+
+test('unconfigured fallback proxy keeps the existing catalog-gap panel', async () => {
+  apiJson.mockImplementation((url) => {
+    if (url.includes('openlibrary.org')) {
+      return Promise.reject(Object.assign(new Error('Request failed with status 404'), { status: 404 }));
+    }
+    return Promise.reject(Object.assign(new Error('Request failed with status 503'), { status: 503 }));
+  });
+  render(<ISBNCheckPage />);
+  search('9791199305304');
+  await waitFor(() => expect(screen.getByText(/isn't in the Open Library catalog/i)).toBeInTheDocument());
+  expect(screen.getByRole('link', { name: 'Aladin (Korean books)' })).toBeInTheDocument();
+});
+
+test('Open Library network failure does not call the fallback proxy', async () => {
+  apiJson.mockRejectedValue(new Error('Failed to fetch'));
+  render(<ISBNCheckPage />);
+  search('9780747532699');
+  await waitFor(() => expect(screen.getByText(/Couldn't reach the book database/i)).toBeInTheDocument());
+  expect(apiJson).toHaveBeenCalledTimes(1);
+});
