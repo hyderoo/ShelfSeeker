@@ -11,7 +11,9 @@ export async function apiJson(url) {
   }
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`);
+    const error = new Error(`Request failed with status ${response.status}`);
+    error.status = response.status;
+    throw error;
   }
   return response.json();
 }
