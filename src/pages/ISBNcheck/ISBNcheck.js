@@ -13,6 +13,7 @@ const ISBNCheckPage = () => {
   // 'invalid' (bad check digit), 'not-found' (valid but not in Open Library),
   // 'network' (lookup request failed), or '' (no error)
   const [errorKind, setErrorKind] = useState('');
+  const [lastQuery, setLastQuery] = useState('');
   const [scanning, setScanning] = useState(false);
   const [scanNotice, setScanNotice] = useState('');
   const searchText = useRef(null);
@@ -56,8 +57,10 @@ const ISBNCheckPage = () => {
       setBookData(null);
       setAuthorName('');
       setErrorKind('invalid');
+      setLastQuery('');
       return;
     }
+    setLastQuery(query);
 
     apiJson(`https://openlibrary.org/isbn/${encodeURIComponent(query)}.json`)
       .then(data => {
@@ -143,7 +146,13 @@ const ISBNCheckPage = () => {
       )}
       {errorKind === 'not-found' && (
         <div className="not-found-message">
-          <p>This ISBN isn't in the Open Library catalog. That doesn't say anything about whether the book is an original copy - the catalog just doesn't include every published edition.</p>
+          <p>This ISBN isn't in the Open Library catalog. That doesn't say anything about whether the book is an original copy - no single catalog includes every published edition.</p>
+          <p className="alt-sources-label">You can look up this ISBN in another catalog:</p>
+          <div className="alt-sources">
+            <a href={`https://books.google.com/books?vid=ISBN${lastQuery}`} target="_blank" rel="noopener noreferrer">Google Books</a>
+            <a href={`https://search.worldcat.org/search?q=bn%3A${lastQuery}`} target="_blank" rel="noopener noreferrer">WorldCat</a>
+            <a href={`https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=Book&SearchWord=${lastQuery}`} target="_blank" rel="noopener noreferrer">Aladin (Korean books)</a>
+          </div>
         </div>
       )}
       {errorKind === 'network' && (

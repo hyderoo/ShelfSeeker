@@ -158,3 +158,29 @@
     border-radius: var(--radius-sm);
     padding: 1rem 1.4rem;
 }
+
+/* other-catalog links shown on a catalog miss */
+.alt-sources-label {
+    margin-top: 1.6rem;
+    font-weight: 600;
+}
+.alt-sources {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.2rem;
+}
+.alt-sources a {
+    display: inline-block;
+    padding: 0.8rem 1.6rem;
+    border: 1px solid #f3d9c6;
+    border-radius: var(--radius-md);
+    background-color: #fff;
+    color: #8a4b1f;
+    font-weight: 600;
+    transition: var(--transition);
+}
+.alt-sources a:hover {
+    background-color: #f3d9c6;
+}

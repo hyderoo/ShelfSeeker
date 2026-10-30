@@ -67,3 +67,21 @@ test('network failure shows connection message', async () => {
   search('9780747532699');
   await waitFor(() => expect(screen.getByText(/Couldn't reach the book database/i)).toBeInTheDocument());
 });
+
+test('catalog miss offers external lookups for the queried ISBN', async () => {
+  apiJson.mockRejectedValue(Object.assign(new Error('Request failed with status 404'), { status: 404 }));
+  render(<ISBNCheckPage />);
+  search('979-11-993053-0-4 (02810)');
+  await waitFor(() => expect(screen.getByText(/another catalog/i)).toBeInTheDocument());
+  expect(screen.getByRole('link', { name: 'Google Books' })).toHaveAttribute('href', 'https://books.google.com/books?vid=ISBN9791199305304');
+  expect(screen.getByRole('link', { name: 'WorldCat' })).toHaveAttribute('href', 'https://search.worldcat.org/search?q=bn%3A9791199305304');
+  expect(screen.getByRole('link', { name: 'Aladin (Korean books)' })).toHaveAttribute('href', 'https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=Book&SearchWord=9791199305304');
+});
+
+test('successful lookup does not show external lookups', async () => {
+  apiJson.mockResolvedValue({ title: 'Harry Potter', isbn_13: '9780747532699' });
+  render(<ISBNCheckPage />);
+  search('9780747532699');
+  await waitFor(() => expect(screen.getByText(/Found in the Open Library catalog/i)).toBeInTheDocument());
+  expect(screen.queryByRole('link', { name: 'Google Books' })).not.toBeInTheDocument();
+});
